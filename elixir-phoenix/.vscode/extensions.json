@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ExpertLSP.expert",
+    "pantajoe.vscode-elixir-credo",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

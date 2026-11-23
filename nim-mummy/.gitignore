@@ -1,0 +1,6 @@
+/bin/
+/.task/
+# nimble setup / nimble -l が作るもの（依存とそのパス）
+nimble.develop
+nimble.paths
+nimbledeps

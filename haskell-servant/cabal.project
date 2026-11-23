@@ -1,0 +1,4 @@
+packages: .
+
+-- 依存はすべて nix（flake.nix の ghcWithPackages）から入れるので Hackage は参照しない（オフラインで build できる）
+active-repositories: :none

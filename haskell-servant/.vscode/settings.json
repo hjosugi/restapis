@@ -1,0 +1,11 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）。GHCup でダウンロードさせない
+  "haskell.manageHLS": "PATH",
+  "haskell.formattingProvider": "fourmolu",
+  // HLS 内蔵の fourmolu ではなく PATH の fourmolu を使う（task fmt と同じバージョン + fourmolu.yaml）
+  "haskell.plugin.fourmolu.config.external": true,
+  // nixpkgs の HLS には hlint プラグインが入っていないので、hlint は task lint で実行する
+  "[haskell]": {
+    "editor.formatOnSave": true
+  }
+}

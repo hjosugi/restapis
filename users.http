@@ -1,0 +1,54 @@
+# users API を手で叩くためのファイル
+#   VS Code: REST Client (humao.rest-client) / Neovim: kulala.nvim（LazyVim の lang.rest extra）
+# @baseUrl のポートを変えれば、どの言語のサーバーにも同じリクエストを送れる
+
+@baseUrl = http://127.0.0.1:8003
+
+### 一覧取得
+GET {{baseUrl}}/users
+
+### 検索（名前の部分一致・大文字小文字無視）
+GET {{baseUrl}}/users?name=al
+
+### 検索（年齢の下限）
+GET {{baseUrl}}/users?min_age=30
+
+### 作成
+# @name create
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Carol",
+  "email": "carol@example.com",
+  "age": 35
+}
+
+### 1件取得（直前の「作成」の id を使う）
+GET {{baseUrl}}/users/{{create.response.body.$.id}}
+
+### 更新（全置換）
+PUT {{baseUrl}}/users/{{create.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "name": "Carol Smith",
+  "email": "carol@example.com",
+  "age": 36
+}
+
+### 削除
+DELETE {{baseUrl}}/users/{{create.response.body.$.id}}
+
+### 入力エラー（400）
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "",
+  "email": "x@example.com",
+  "age": -1
+}
+
+### 存在しない id（404）
+GET {{baseUrl}}/users/999999

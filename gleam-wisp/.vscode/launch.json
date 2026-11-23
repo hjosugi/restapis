@@ -1,0 +1,21 @@
+{
+  // Gleam (BEAM) にはステップ実行できるデバッガが無いので、Task を実行するだけの構成
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (task run)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task run",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "client (task client)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task client",
+      "cwd": "${workspaceFolder}",
+      "env": { "API_URL": "http://127.0.0.1:8013" }
+    }
+  ]
+}

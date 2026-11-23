@@ -1,0 +1,6 @@
+# clang-format: LLVM スタイルをベースに 4 スペース / 100 桁
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100
+# 引数が 1 行に収まらないときは ( の直後で改行する（registerHandler のラムダ登録をそろえる）
+AlignAfterOpenBracket: AlwaysBreak

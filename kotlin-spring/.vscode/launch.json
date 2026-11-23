@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "intellij_jvm",
+      "request": "launch",
+      "mainClass": "example.users.UsersApplicationKt",
+      "env": { "PORT": "8009" }
+    },
+    {
+      "name": "client (debug)",
+      "type": "intellij_jvm",
+      "request": "launch",
+      "mainClass": "example.users.client.UsersClientKt",
+      "env": { "API_URL": "http://127.0.0.1:8009" }
+    }
+  ]
+}

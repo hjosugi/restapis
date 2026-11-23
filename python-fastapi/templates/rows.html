@@ -1,0 +1,14 @@
+{# 一覧の行。GET / と GET・POST /ui/users で使い回す。{{ }} の中身は自動で HTML エスケープされる -#}
+{# 削除ボタン: 確認ダイアログのあと DELETE /ui/users/{id} を送り、成功したらこの行（closest tr）を消す -#}
+{% for user in users -%}
+<tr>
+  <td>{{ user.id }}</td>
+  <td>{{ user.name }}</td>
+  <td>{{ user.email }}</td>
+  <td>{{ user.age }}</td>
+  <td>
+    <button hx-delete="/ui/users/{{ user.id }}" hx-confirm="{{ user.name }} を削除しますか？"
+            hx-target="closest tr" hx-swap="delete">削除</button>
+  </td>
+</tr>
+{% endfor %}

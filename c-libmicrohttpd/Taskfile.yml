@@ -1,0 +1,58 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8001
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "c-libmicrohttpd"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをホットリロードで起動（src/ が変わったら再ビルドして再起動）
+    cmd: "{{.NIX}}watchexec --restart --shell=bash --watch src --exts c,h -- 'make bin/server && exec bin/server'"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmds:
+      - "{{.NIX}}make bin/server"
+      - ./bin/server
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmds:
+      - "{{.NIX}}make bin/client"
+      - ./bin/client
+
+  build:
+    desc: bin/server と bin/client をビルド（clangd 用の compile_commands.json も生成）
+    deps: [compdb]
+    cmd: "{{.NIX}}make"
+
+  compdb:
+    desc: clangd / clang-tidy 用の compile_commands.json を bear で生成
+    cmd: "{{.NIX}}bear -- make -B"
+    sources: [Makefile]
+    generates: [compile_commands.json]
+
+  fmt:
+    desc: フォーマット (clang-format)
+    cmd: "{{.NIX}}clang-format -i src/*.c"
+
+  lint:
+    desc: リント (clang-format のチェック + clang-tidy)
+    deps: [compdb]
+    cmds:
+      - "{{.NIX}}clang-format --dry-run --Werror src/*.c"
+      - "{{.NIX}}clang-tidy --quiet --warnings-as-errors='*' src/*.c"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

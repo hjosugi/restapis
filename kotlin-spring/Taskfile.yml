@@ -1,0 +1,50 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8009
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "kotlin-spring"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+# 依存ライブラリは gradle が build.gradle.kts を見て自動で取得する（~/.gradle にキャッシュ）
+# gradle はデーモンが常駐する。止めるときは `task stop`
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをファイル変更で再起動しながら起動 (watchexec)
+    cmd: "{{.NIX}}watchexec --restart --watch src --watch build.gradle.kts -- gradle -q bootRun"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}gradle -q bootRun"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}gradle -q client"
+
+  build:
+    desc: 実行可能 jar をビルド (build/libs/kotlin-spring-0.0.1-SNAPSHOT.jar)
+    cmd: "{{.NIX}}gradle -q bootJar"
+
+  fmt:
+    desc: フォーマット (ktlint --format)
+    cmd: "{{.NIX}}ktlint --format 'src/**/*.kt' '*.kts'"
+
+  lint:
+    desc: リント (ktlint)
+    cmd: "{{.NIX}}ktlint 'src/**/*.kt' '*.kts'"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"
+
+  stop:
+    desc: Gradle デーモンを止める
+    cmd: "{{.NIX}}gradle --stop"

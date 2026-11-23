@@ -1,0 +1,4 @@
+;; clj-kondo の設定（既定のリンターに加えて有効にするもの）
+{:linters {:unsorted-required-namespaces {:level :warning}
+           :redundant-fn-wrapper {:level :warning}
+           :docstring-leading-trailing-whitespace {:level :warning}}}

@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "rheller.alive",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

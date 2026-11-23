@@ -1,0 +1,47 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8013
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "gleam-wisp"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+# 依存パッケージは gleam run / gleam build が manifest.toml を見て自動で取得する
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをファイル変更で再起動しながら起動 (watchexec)
+    cmd: "{{.NIX}}watchexec --restart --watch src --exts gleam -- gleam run -m server"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}gleam run -m server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}gleam run -m client"
+
+  build:
+    desc: Erlang にコンパイル (build/dev/erlang)
+    cmd: "{{.NIX}}gleam build"
+
+  fmt:
+    desc: フォーマット (gleam format)
+    cmd: "{{.NIX}}gleam format src"
+
+  lint:
+    desc: リント (gleam format --check + コンパイラ警告をエラー扱い)
+    cmds:
+      - "{{.NIX}}gleam format --check src"
+      - "{{.NIX}}gleam build --warnings-as-errors"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin=server"],
+        "filter": { "name": "server", "kind": "bin" }
+      },
+      "cwd": "${workspaceFolder}",
+      "env": { "PORT": "8004" }
+    },
+    {
+      "name": "client (debug)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": ["build", "--bin=client"],
+        "filter": { "name": "client", "kind": "bin" }
+      },
+      "cwd": "${workspaceFolder}",
+      "env": { "API_URL": "http://127.0.0.1:8004" }
+    }
+  ]
+}

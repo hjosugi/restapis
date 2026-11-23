@@ -1,0 +1,44 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8003
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "go-gin"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをホットリロードで起動
+    cmd: "{{.NIX}}watchexec --restart --exts go -- go run ./cmd/server"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}go run ./cmd/server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}go run ./cmd/client"
+
+  build:
+    desc: バイナリをビルド
+    cmd: "{{.NIX}}go build -o bin/ ./cmd/..."
+
+  fmt:
+    desc: フォーマット (gofumpt + goimports)
+    cmd: "{{.NIX}}golangci-lint fmt"
+
+  lint:
+    desc: リント (golangci-lint)
+    cmd: "{{.NIX}}golangci-lint run"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

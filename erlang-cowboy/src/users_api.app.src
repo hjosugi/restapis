@@ -1,0 +1,8 @@
+{application, users_api, [
+    {description, "users REST API (Cowboy) + httpc client"},
+    {vsn, "0.1.0"},
+    {registered, [users_api_sup, users_store]},
+    {mod, {users_api_app, []}},
+    {applications, [kernel, stdlib, cowboy]},
+    {env, []}
+]}.

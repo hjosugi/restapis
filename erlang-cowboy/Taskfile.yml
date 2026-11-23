@@ -1,0 +1,53 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8012
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "erlang-cowboy"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+  # rebar3 compile の成果物（依存 + users_api）をコードパスに入れて erl を起動
+  ERL: erl -noshell -pa _build/default/lib/*/ebin
+  FMT_FILES: src/*.erl src/*.app.src rebar.config elvis.config
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: ファイル変更でコンパイル + 再起動 (watchexec)
+    cmd: >-
+      {{.NIX}}watchexec --restart --exts erl,src,config --
+      "rebar3 compile && {{.ERL}} -eval '{ok, _} = application:ensure_all_started(users_api)'"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    deps: [build]
+    cmd: "{{.NIX}}{{.ERL}} -eval '{ok, _} = application:ensure_all_started(users_api)'"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [build]
+    cmd: "{{.NIX}}{{.ERL}} -s users_client main -s init stop"
+
+  build:
+    desc: コンパイル（依存の取得も rebar3 が行う）
+    cmd: "{{.NIX}}rebar3 compile"
+
+  fmt:
+    desc: フォーマット (erlfmt)
+    cmd: "{{.NIX}}erlfmt --write {{.FMT_FILES}}"
+
+  lint:
+    desc: リント (erlfmt --check + elvis)
+    cmds:
+      - "{{.NIX}}erlfmt --check {{.FMT_FILES}}"
+      - "{{.NIX}}elvis rock"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

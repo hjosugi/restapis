@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "oven.bun-vscode",
+    "oxc.oxc-vscode",
+    "typescriptteam.native-preview",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

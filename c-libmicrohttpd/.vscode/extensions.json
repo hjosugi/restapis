@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "llvm-vs-code-extensions.vscode-clangd",
+    "ms-vscode.cpptools",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

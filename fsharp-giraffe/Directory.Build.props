@@ -1,0 +1,15 @@
+<!-- src/ 以下の全プロジェクト共通の設定 -->
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <!-- 警告はすべてエラーにする。未使用変数の警告 (FS1182) も有効化 -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarnOn>$(WarnOn);1182</WarnOn>
+    <!-- 依存の脆弱性警告 (NuGetAudit) は警告のままにして、ビルドは止めない -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+    <!-- 依存のバージョンを packages.lock.json に固定する -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <!-- FSharp.Core の翻訳リソースを出力にコピーしない -->
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+</Project>

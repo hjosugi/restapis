@@ -1,0 +1,42 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8014
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "clojure-reitit"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーを変更検知で再起動（watchexec）。REPL で開発するなら Calva の Jack-in を使う
+    cmd: "{{.NIX}}watchexec --restart --exts clj,edn -- clojure -M:server"
+
+  run:
+    desc: サーバーを起動（依存は初回に ~/.m2 へ自動で取得される）
+    aliases: [main, server]
+    cmd: "{{.NIX}}clojure -M:server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}clojure -M:client"
+
+  fmt:
+    desc: フォーマット (cljfmt)
+    cmd: "{{.NIX}}cljfmt fix src deps.edn"
+
+  lint:
+    desc: リント (clj-kondo) + フォーマット確認 (cljfmt check)
+    cmds:
+      - "{{.NIX}}clj-kondo --lint src"
+      - "{{.NIX}}cljfmt check src deps.edn"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

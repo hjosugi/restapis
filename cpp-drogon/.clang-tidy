@@ -1,0 +1,24 @@
+# clang-tidy: バグ検出・C++ Core Guidelines・モダン化・可読性のチェックを広く有効にして、
+# サンプルにはうるさすぎるものだけ外す
+Checks:
+  - bugprone-*
+  - clang-analyzer-*
+  - cppcoreguidelines-*
+  - misc-*
+  - modernize-*
+  - performance-*
+  - portability-*
+  - readability-*
+  - -bugprone-easily-swappable-parameters # 同じ型の引数が並ぶと警告
+  - -bugprone-exception-escape # main から例外が漏れると警告（サンプルなので異常終了でよい）
+  - -cppcoreguidelines-avoid-magic-numbers
+  - -cppcoreguidelines-pro-bounds-avoid-unchecked-container-access # Json::Value の operator[] も警告
+  - -cppcoreguidelines-rvalue-reference-param-not-moved # Drogon のハンドラは callback を && で受け取る決まり
+  - -misc-include-cleaner # drogon/drogon.h などの umbrella ヘッダーを使わせてくれない
+  - -modernize-use-trailing-return-type # auto f() -> T 形式を強制する
+  - -readability-identifier-length
+  - -readability-magic-numbers
+  - -readability-redundant-member-init # 指定初期化子で省略するメンバーの {} を冗長と言う（外すと -Wmissing-field-initializers）
+  - -readability-trailing-comma # 複数行の初期化子リストに末尾カンマを強制する
+CheckOptions:
+  misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true

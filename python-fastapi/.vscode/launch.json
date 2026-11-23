@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["server:app", "--host", "127.0.0.1", "--port", "8007"],
+      "cwd": "${workspaceFolder}",
+      "jinja": true
+    },
+    {
+      "name": "client (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/client.py",
+      "env": { "API_URL": "http://127.0.0.1:8007" }
+    }
+  ]
+}

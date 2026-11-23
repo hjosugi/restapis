@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+    "emeraldwalk.RunOnSave",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

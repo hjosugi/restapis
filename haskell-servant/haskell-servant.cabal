@@ -1,0 +1,47 @@
+cabal-version: 3.0
+name:          haskell-servant
+version:       0.1.0.0
+synopsis:      users REST API (Servant) + client (servant-client)
+build-type:    Simple
+
+-- 依存パッケージは flake.nix の ghcWithPackages（nix）が GHC に入れてある
+common shared
+  default-language: GHC2024
+  ghc-options:      -Wall
+  build-depends:
+    , aeson
+    , base
+    , text
+
+-- サーバーとクライアントで共有する API 型
+library
+  import:          shared
+  hs-source-dirs:  src
+  exposed-modules: Api
+  build-depends:   servant
+
+executable server
+  import:         shared
+  hs-source-dirs: app
+  main-is:        Server.hs
+  ghc-options:    -threaded
+  build-depends:
+    , containers
+    , haskell-servant
+    , http-types
+    , servant-server
+    , warp
+
+executable client
+  import:         shared
+  hs-source-dirs: app
+  main-is:        Client.hs
+  build-depends:
+    , bytestring
+    , haskell-servant
+    , http-client
+    , mtl
+    , http-types
+    , servant
+    , servant-client
+    , servant-client-core

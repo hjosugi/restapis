@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "bun",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/server.ts",
+      "cwd": "${workspaceFolder}",
+      "env": { "PORT": "8006" }
+    },
+    {
+      "name": "client (debug)",
+      "type": "bun",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/client.ts",
+      "cwd": "${workspaceFolder}",
+      "env": { "API_URL": "http://127.0.0.1:8006" }
+    }
+  ]
+}

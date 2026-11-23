@@ -1,0 +1,4 @@
+{
+  "$schema": "https://unpkg.com/oxfmt@0.75.0/configuration_schema.json",
+  "ignorePatterns": ["*.md"]
+}

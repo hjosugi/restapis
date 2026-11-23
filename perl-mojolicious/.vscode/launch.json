@@ -1,0 +1,24 @@
+{
+  // richterger.perl (Perl::LanguageServer) のデバッガで起動する
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "perl",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.pl",
+      "args": ["daemon", "-l", "http://127.0.0.1:8017"],
+      "env": { "PORT": "8017" },
+      "stopOnEntry": false,
+      "reloadModules": true
+    },
+    {
+      "name": "client (debug)",
+      "type": "perl",
+      "request": "launch",
+      "program": "${workspaceFolder}/client.pl",
+      "env": { "API_URL": "http://127.0.0.1:8017" },
+      "stopOnEntry": false
+    }
+  ]
+}

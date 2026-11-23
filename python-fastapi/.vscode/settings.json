@@ -1,0 +1,17 @@
+{
+  // Python は uv が作る .venv（中身は nix の Python）、ruff / ty は nix devShell のものを使う
+  // （mkhl.direnv が .envrc を読み込んで PATH に入れる）
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  // 補完・型チェックは ty の拡張に任せる（Pylance を動かさない）
+  "python.languageServer": "None",
+  // 拡張に同梱のバイナリではなく、環境（.venv → PATH）の ruff / ty を使う
+  "ruff.importStrategy": "fromEnvironment",
+  "ty.importStrategy": "fromEnvironment",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit"
+    }
+  }
+}

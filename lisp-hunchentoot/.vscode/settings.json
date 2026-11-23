@@ -1,0 +1,20 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // Alive の LSP サーバー alive-lsp は flake の sbcl.withPackages に入れてある。
+  // 既定の起動コマンドは Quicklisp (ql:quickload) 前提なので、ASDF だけで読み込む形に置き換える
+  "alive.lsp.startCommand": [
+    "sbcl",
+    "--eval",
+    "(require :asdf)",
+    "--eval",
+    "(asdf:load-system :alive-lsp)",
+    "--eval",
+    "(alive/server:start)"
+  ],
+  // install.path が空だと拡張が alive-lsp を GitHub から自動ダウンロードするので、ダミーの "/" を入れて止める
+  "alive.lsp.install.path": "/",
+  // 整形は task fmt (cl-indentify)。Alive の整形はインデント規則が違うので保存時には使わない
+  "[commonlisp]": {
+    "editor.formatOnSave": false
+  }
+}

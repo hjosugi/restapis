@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      // launch.json の preLaunchTask。--debugger:native 付きで bin/ にビルド
+      "label": "task build",
+      "type": "shell",
+      "command": "task build",
+      "problemMatcher": []
+    }
+  ]
+}

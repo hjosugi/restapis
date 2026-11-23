@@ -1,0 +1,18 @@
+{
+  // Clojure は REPL 中心（Calva: Jack-in → 式を評価）なので、ここでは Task を実行するだけ
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (task run)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task run"
+    },
+    {
+      "name": "client (task client)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task client"
+    }
+  ]
+}

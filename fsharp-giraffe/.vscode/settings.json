@@ -1,0 +1,13 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // Ionide: 整形は PATH 上の fantomas、リントは FsAutoComplete 内蔵の FSharpLint
+  "FSharp.linter": true,
+  "FSharp.suggestGitignore": false,
+  "FSharp.suggestSdkScripts": false,
+  "[fsharp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Ionide.Ionide-fsharp"
+  },
+  // C# 拡張はデバッガ (coreclr) のためだけに使う。ソリューションを自動で読み込ませない
+  "dotnet.defaultSolution": "disable"
+}

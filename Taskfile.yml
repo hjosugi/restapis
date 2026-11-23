@@ -1,0 +1,38 @@
+# https://taskfile.dev
+# ルートから `task <ディレクトリ>:<タスク>` で各言語のタスクを実行できる（例: task rust-axum:run）
+version: "3"
+
+includes:
+  c-libmicrohttpd: { taskfile: ./c-libmicrohttpd, dir: ./c-libmicrohttpd }
+  cpp-drogon: { taskfile: ./cpp-drogon, dir: ./cpp-drogon }
+  go-gin: { taskfile: ./go-gin, dir: ./go-gin }
+  rust-axum: { taskfile: ./rust-axum, dir: ./rust-axum }
+  haskell-servant: { taskfile: ./haskell-servant, dir: ./haskell-servant }
+  typescript-elysia: { taskfile: ./typescript-elysia, dir: ./typescript-elysia }
+  python-fastapi: { taskfile: ./python-fastapi, dir: ./python-fastapi }
+  java-spring: { taskfile: ./java-spring, dir: ./java-spring }
+  kotlin-spring: { taskfile: ./kotlin-spring, dir: ./kotlin-spring }
+  fsharp-giraffe: { taskfile: ./fsharp-giraffe, dir: ./fsharp-giraffe }
+  elixir-phoenix: { taskfile: ./elixir-phoenix, dir: ./elixir-phoenix }
+  erlang-cowboy: { taskfile: ./erlang-cowboy, dir: ./erlang-cowboy }
+  gleam-wisp: { taskfile: ./gleam-wisp, dir: ./gleam-wisp }
+  clojure-reitit: { taskfile: ./clojure-reitit, dir: ./clojure-reitit }
+  lisp-hunchentoot: { taskfile: ./lisp-hunchentoot, dir: ./lisp-hunchentoot }
+  nim-mummy: { taskfile: ./nim-mummy, dir: ./nim-mummy }
+  perl-mojolicious: { taskfile: ./perl-mojolicious, dir: ./perl-mojolicious }
+  php-slim: { taskfile: ./php-slim, dir: ./php-slim }
+
+tasks:
+  default:
+    cmd: task --list-all
+    silent: true
+
+  check:
+    desc: "起動中のサーバーを検証 (例: task check PORT=8004)"
+    requires:
+      vars: [PORT]
+    cmd: ./scripts/check.sh http://127.0.0.1:{{.PORT}}
+
+  vscode-extensions:
+    desc: 各ディレクトリの .vscode/extensions.json にある推奨拡張を VS Code にまとめてインストール
+    cmd: jq -r '.recommendations[]' .vscode/extensions.json */.vscode/extensions.json | sort -u | xargs -n1 code --install-extension

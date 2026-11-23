@@ -1,0 +1,14 @@
+{
+  // clangd / clang-format / clang-tidy / gdb は nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // clangd は compile_commands.json（task build で生成）を読み、.clang-tidy のチェックも表示する
+  "clangd.path": "clangd",
+  "clangd.checkUpdates": false,
+  "clangd.arguments": ["--clang-tidy", "--header-insertion=never"],
+  // 補完・診断・フォーマットは clangd に任せ、cpptools はデバッガ (gdb) としてだけ使う
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "C_Cpp.formatting": "disabled",
+  "[c]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "editor.formatOnSave": true
+  }
+}

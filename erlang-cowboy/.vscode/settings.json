@@ -1,0 +1,10 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // ELP / erlfmt は拡張に同梱のものではなく PATH 上（devShell）のものを起動する
+  "elpClient.serverPath": "elp",
+  "elpClient.erlfmt.path": "erlfmt",
+  "[erlang]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "erlang-language-platform.erlang-language-platform"
+  }
+}

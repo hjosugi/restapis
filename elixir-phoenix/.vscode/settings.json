@@ -1,0 +1,12 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // Expert: 拡張にダウンロードさせず PATH 上の expert を起動。asdf / mise も見に行かない
+  "expert.server.releasePathOverride": "expert",
+  "expert.server.versionManager": "none",
+  // 依存の取得は task deps（mix deps.get）で行う
+  "expert.server.autoFetchDependencies": false,
+  "[elixir]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ExpertLSP.expert"
+  }
+}

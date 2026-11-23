@@ -1,0 +1,15 @@
+{
+    "name": "restapis/php-slim",
+    "description": "users REST API (Slim 4 + ReactPHP) and PHP client (Guzzle)",
+    "type": "project",
+    "require": {
+        "php": "^8.5",
+        "guzzlehttp/guzzle": "^8.6",
+        "react/http": "^1.12",
+        "slim/psr7": "^1.8",
+        "slim/slim": "^4.15"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

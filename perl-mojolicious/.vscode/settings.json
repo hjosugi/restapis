@@ -1,0 +1,13 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // LSP / フォーマット / perlcritic は PerlNavigator (bscan.perlnavigator)。設定ファイルはこのディレクトリのもの
+  "perlnavigator.perlPath": "perl",
+  "perlnavigator.perltidyProfile": "$workspaceFolder/.perltidyrc",
+  "perlnavigator.perlcriticProfile": "$workspaceFolder/.perlcriticrc",
+  // richterger.perl (Perl::LanguageServer) はデバッガとして使う。解析キャッシュをディスクに書かない
+  "perl.disableCache": true,
+  "[perl]": {
+    "editor.defaultFormatter": "bscan.perlnavigator",
+    "editor.formatOnSave": true
+  }
+}

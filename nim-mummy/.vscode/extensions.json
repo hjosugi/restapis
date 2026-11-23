@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "nimlang.nimlang",
+    "vadimcn.vscode-lldb",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

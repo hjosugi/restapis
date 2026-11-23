@@ -1,0 +1,34 @@
+{
+  // xdebug.php-debug で起動する（XDEBUG_MODE=debug で Xdebug を有効にし、拡張が選んだポートに接続させる）
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "php",
+      "request": "launch",
+      "program": "${workspaceFolder}/server.php",
+      "cwd": "${workspaceFolder}",
+      "port": 0,
+      "runtimeArgs": ["-dxdebug.start_with_request=yes"],
+      "env": {
+        "XDEBUG_MODE": "debug",
+        "XDEBUG_CONFIG": "client_port=${port}",
+        "PORT": "8018"
+      }
+    },
+    {
+      "name": "client (debug)",
+      "type": "php",
+      "request": "launch",
+      "program": "${workspaceFolder}/client.php",
+      "cwd": "${workspaceFolder}",
+      "port": 0,
+      "runtimeArgs": ["-dxdebug.start_with_request=yes"],
+      "env": {
+        "XDEBUG_MODE": "debug",
+        "XDEBUG_CONFIG": "client_port=${port}",
+        "API_URL": "http://127.0.0.1:8018"
+      }
+    }
+  ]
+}

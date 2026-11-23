@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "JetBrains.kotlin-server",
+    "vscjava.vscode-gradle",
+    "emeraldwalk.RunOnSave",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

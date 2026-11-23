@@ -1,0 +1,22 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // oxc 拡張・Bun 拡張は PATH 上の oxlint / oxfmt / bun を見つけて使う（ダウンロードしない）
+  // TypeScript は TypeScript 7（ネイティブ版）の言語サーバーを使う（typescriptteam.native-preview）
+  "js/ts.experimental.useTsgo": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
+}

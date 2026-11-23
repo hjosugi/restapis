@@ -1,0 +1,46 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8007
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "python-fastapi"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+# 依存（uv.lock）は `uv run` が実行前に .venv へ自動で入れる（2 回目以降は差分がなければ何もしない）
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをホットリロードで起動 (uvicorn --reload)
+    cmd: "{{.NIX}}uv run uvicorn server:app --reload --host 127.0.0.1 --port {{.PORT}}"
+
+  run:
+    desc: サーバーを起動（http://127.0.0.1:8007/ で htmx の画面）
+    aliases: [main, server]
+    cmd: "{{.NIX}}uv run server.py"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}uv run client.py"
+
+  fmt:
+    desc: フォーマット (ruff format + import の並べ替え)
+    cmds:
+      - "{{.NIX}}ruff check --select I --fix"
+      - "{{.NIX}}ruff format"
+
+  lint:
+    desc: リント (ruff check / ruff format --check) + 型チェック (ty check)
+    cmds:
+      - "{{.NIX}}ruff check"
+      - "{{.NIX}}ruff format --check"
+      - "{{.NIX}}uv run ty check"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

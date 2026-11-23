@@ -1,0 +1,44 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8005
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "haskell-servant"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをホットリロードで起動 (ghcid。src/ や .cabal の変更では GHCi ごと再起動)
+    cmd: "{{.NIX}}ghcid --command='cabal repl server' --restart=src --restart=haskell-servant.cabal --test=main"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}cabal run server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}cabal run -v0 client"
+
+  build:
+    desc: ビルド (dist-newstyle/ に出力)
+    cmd: "{{.NIX}}cabal build all"
+
+  fmt:
+    desc: フォーマット (fourmolu)
+    cmd: "{{.NIX}}fourmolu --mode inplace src app"
+
+  lint:
+    desc: リント (hlint)
+    cmd: "{{.NIX}}hlint src app"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

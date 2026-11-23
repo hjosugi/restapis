@@ -1,0 +1,17 @@
+name = "users_api"
+version = "1.0.0"
+description = "users REST API (Wisp + Mist) と gleam_httpc クライアント"
+
+# 実行: gleam run -m server / gleam run -m client
+[dependencies]
+gleam_stdlib = ">= 1.0.0 and < 2.0.0"
+gleam_erlang = ">= 1.3.0 and < 2.0.0"
+gleam_otp = ">= 1.3.0 and < 2.0.0"
+gleam_http = ">= 4.5.0 and < 5.0.0"
+gleam_json = ">= 3.1.0 and < 4.0.0"
+envoy = ">= 1.2.0 and < 2.0.0"
+# サーバー
+wisp = ">= 2.2.2 and < 3.0.0"
+mist = ">= 6.0.3 and < 7.0.0"
+# クライアント
+gleam_httpc = ">= 5.0.0 and < 6.0.0"

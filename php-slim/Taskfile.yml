@@ -1,0 +1,50 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8018
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "php-slim"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  deps:
+    desc: 依存ライブラリを取得 (composer install。composer.json / composer.lock が変わったときだけ)
+    cmd: "{{.NIX}}composer install"
+    sources: [composer.json, composer.lock]
+    generates: [vendor/autoload.php]
+
+  dev:
+    desc: サーバーをホットリロードで起動 (watchexec)
+    deps: [deps]
+    cmd: "{{.NIX}}watchexec --restart --exts php -- php server.php"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    deps: [deps]
+    cmd: "{{.NIX}}php server.php"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [deps]
+    cmd: "{{.NIX}}php client.php"
+
+  fmt:
+    desc: フォーマット (PHP-CS-Fixer / PER-CS)
+    cmd: "{{.NIX}}php-cs-fixer fix"
+
+  lint:
+    desc: 静的解析 (PHPStan level max)
+    deps: [deps]
+    cmd: "{{.NIX}}phpstan analyse"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

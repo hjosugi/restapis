@@ -1,0 +1,37 @@
+[project]
+name = "python-fastapi"
+version = "0.1.0"
+description = "users REST API (FastAPI + htmx) と httpx クライアント"
+requires-python = ">=3.15"
+dependencies = [
+    "fastapi>=0.165.0",
+    "httpx>=0.28.1",
+    "jinja2>=3.1.6",
+    "python-multipart>=0.0.34",
+    "uvicorn>=0.54.0",
+]
+
+# ruff: formatter (`ruff format`) + linter (`ruff check`)。target-version は requires-python から決まる
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle
+    "W",    # pycodestyle (warning)
+    "F",    # Pyflakes
+    "I",    # isort（import の並び順）
+    "N",    # pep8-naming
+    "UP",   # pyupgrade（新しい書き方へ）
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "SIM",  # flake8-simplify
+    "RUF",  # Ruff 独自ルール
+    "FAST", # FastAPI 向けルール
+]
+# 日本語の全角記号を「紛らわしい文字」として警告しない
+allowed-confusables = ["（", "）", "？"]
+
+# ty: 型チェッカー。.venv（uv が作る）からライブラリを解決する
+[tool.ty.environment]
+python = ".venv"

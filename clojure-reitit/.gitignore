@@ -1,0 +1,6 @@
+/.cpcache/
+/.clj-kondo/.cache/
+/.clj-kondo/imports/
+/.lsp/
+/.calva/
+/.nrepl-port

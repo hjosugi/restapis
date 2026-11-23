@@ -1,0 +1,18 @@
+{
+  // JDK / Gradle / ktlint は nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）。
+  // Gradle Wrapper は置いていないので、IDE も flake.nix の GRADLE_HOME（nix の Gradle）を使う
+  // Kotlin の補完・診断・デバッグは Kotlin by JetBrains に任せ、Java 拡張 (redhat.java) の Gradle 取り込みは止める
+  "java.import.gradle.enabled": false,
+  // 保存時の整形は task fmt と同じ ktlint（RunOnSave で実行）。Kotlin LSP の IntelliJ 整形とは結果が違うことがある
+  "[kotlin]": {
+    "editor.formatOnSave": false
+  },
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.kts?$",
+        "cmd": "ktlint --format --log-level=none '${file}'"
+      }
+    ]
+  }
+}

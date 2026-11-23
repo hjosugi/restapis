@@ -1,0 +1,27 @@
+{
+  // Haskell には実用的なデバッガが無いので、Task を VS Code のターミナルで実行する構成にしている
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (task run)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task run",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "server (task dev / ghcid)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "client (task client)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task client",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

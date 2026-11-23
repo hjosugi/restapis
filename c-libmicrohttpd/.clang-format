@@ -1,0 +1,4 @@
+# clang-format: LLVM スタイルをベースに 4 スペース / 100 桁
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100

@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "example.users.UsersApplication",
+      "projectName": "java-spring",
+      "env": { "PORT": "8008" }
+    },
+    {
+      "name": "client (debug)",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "example.users.UsersClient",
+      "projectName": "java-spring",
+      "env": { "API_URL": "http://127.0.0.1:8008" }
+    }
+  ]
+}

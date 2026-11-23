@@ -1,0 +1,7 @@
+# perltidy のバックアップ / エラー出力
+*.bak
+*.tdy
+*.ERR
+*.LOG
+# Perl::LanguageServer (richterger.perl) のキャッシュ
+/.vscode/perl-lang/

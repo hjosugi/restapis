@@ -1,0 +1,12 @@
+# fourmolu の設定 (https://fourmolu.github.io/config/)。書いていない項目は fourmolu の既定値
+indentation: 2
+column-limit: 100
+function-arrows: leading
+comma-style: leading
+import-export-style: diff-friendly
+indent-wheres: true
+record-brace-space: true
+haddock-style: single-line
+let-style: inline
+in-style: right-align
+single-constraint-parens: never

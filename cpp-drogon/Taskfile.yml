@@ -1,0 +1,61 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8002
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "cpp-drogon"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  configure:
+    desc: CMake の構成 (CMakePresets.json の dev = Ninja / Debug → build/。compile_commands.json も生成)
+    cmd: "{{.NIX}}cmake --preset dev"
+    sources: [CMakeLists.txt, CMakePresets.json]
+    generates: [build/build.ninja]
+
+  dev:
+    desc: サーバーをホットリロードで起動（src/ が変わったら再ビルドして再起動）
+    deps: [configure]
+    cmd: "{{.NIX}}watchexec --restart --shell=bash --watch src --exts cpp,hpp,h -- 'cmake --build --preset dev --target server && exec build/server'"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    deps: [configure]
+    cmds:
+      - "{{.NIX}}cmake --build --preset dev --target server"
+      - ./build/server
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [configure]
+    cmds:
+      - "{{.NIX}}cmake --build --preset dev --target client"
+      - ./build/client
+
+  build:
+    desc: server と client をビルド
+    deps: [configure]
+    cmd: "{{.NIX}}cmake --build --preset dev"
+
+  fmt:
+    desc: フォーマット (clang-format)
+    cmd: "{{.NIX}}clang-format -i src/*.cpp"
+
+  lint:
+    desc: リント (clang-format のチェック + clang-tidy)
+    deps: [configure]
+    cmds:
+      - "{{.NIX}}clang-format --dry-run --Werror src/*.cpp"
+      - "{{.NIX}}clang-tidy -p build --quiet --warnings-as-errors='*' src/*.cpp"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

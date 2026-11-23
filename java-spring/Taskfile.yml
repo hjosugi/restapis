@@ -1,0 +1,48 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8008
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "java-spring"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+# 依存ライブラリは mvn が pom.xml を見て自動で取得する（~/.m2/repository にキャッシュ）
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーをファイル変更で再起動しながら起動 (watchexec)
+    cmd: "{{.NIX}}watchexec --restart --watch src --watch pom.xml -- mvn -q spring-boot:run"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}mvn -q spring-boot:run"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    # spring-boot:run の main クラスだけ差し替えて、プロジェクトのクラスパスで UsersClient.main を実行
+    cmd: "{{.NIX}}mvn -q spring-boot:run -Dstart-class=example.users.UsersClient"
+
+  build:
+    desc: 実行可能 jar をビルド (target/java-spring-0.0.1-SNAPSHOT.jar)
+    cmd: "{{.NIX}}mvn -q package"
+
+  fmt:
+    desc: フォーマット (google-java-format)
+    cmd: "{{.NIX}}find src -name '*.java' -exec google-java-format --replace {} +"
+
+  lint:
+    desc: リント (PMD + google-java-format の差分チェック)
+    cmds:
+      - "{{.NIX}}find src -name '*.java' -exec google-java-format --dry-run --set-exit-if-changed {} +"
+      - "{{.NIX}}pmd check --dir src --rulesets pmd.xml --no-cache --no-progress"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

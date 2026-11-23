@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "bscan.perlnavigator",
+    "richterger.perl",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

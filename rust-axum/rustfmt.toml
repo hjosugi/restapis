@@ -1,0 +1,4 @@
+# rustfmt（安定版のオプションのみ）。cargo fmt は Cargo.toml の edition を使うが、
+# エディタなどから rustfmt を直接呼んだときも同じ結果になるように明示しておく。
+edition = "2024"
+style_edition = "2024"

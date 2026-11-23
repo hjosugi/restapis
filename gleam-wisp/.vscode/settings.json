@@ -1,0 +1,11 @@
+{
+  // gleam.gleam 拡張は PATH 上の `gleam lsp` を使う（mkhl.direnv が nix devShell を読み込む）。
+  // フォーマットは LSP 経由の gleam format、コンパイラ警告は LSP の診断として表示される。
+  "[gleam]": {
+    "editor.defaultFormatter": "gleam.gleam",
+    "editor.formatOnSave": true
+  },
+  "files.watcherExclude": {
+    "**/build/**": true
+  }
+}

@@ -1,0 +1,19 @@
+# clang-tidy: バグ検出・静的解析・可読性のチェックを広く有効にして、サンプルにはうるさすぎるものだけ外す
+Checks:
+  - bugprone-*
+  - cert-*
+  - clang-analyzer-*
+  - misc-*
+  - performance-*
+  - portability-*
+  - readability-*
+  - -bugprone-easily-swappable-parameters # 同じ型の引数が並ぶと警告（コールバックの形は決まっている）
+  - -bugprone-signed-bitwise # MHD_USE_* などのフラグの OR を警告
+  - -cert-err33-c # printf などの戻り値を使わないと警告
+  - -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling # memcpy_s など Annex K を勧める
+  - -misc-include-cleaner # glibc / curl の内部ヘッダーまで直接 include させようとする
+  - -readability-function-size # curl_easy_setopt の型チェックマクロで文の数が膨らむ
+  - -readability-identifier-length
+  - -readability-magic-numbers
+CheckOptions:
+  readability-function-cognitive-complexity.IgnoreMacros: true

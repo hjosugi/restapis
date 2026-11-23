@@ -1,0 +1,32 @@
+{
+  // ELP 拡張に同梱の edb（OTP 28+ のデバッガ）で rebar3 shell を起動してアタッチする
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "erlang-edb",
+      "request": "launch",
+      "runInTerminal": {
+        "kind": "integrated",
+        "cwd": "${workspaceFolder}",
+        // rebar.config の {shell, [{apps, [users_api]}]} でサーバーが起動する
+        "args": ["rebar3", "shell"],
+        "env": { "PORT": "8012" }
+      },
+      "config": { "nameDomain": "shortnames" }
+    },
+    {
+      "name": "client (debug)",
+      "type": "erlang-edb",
+      "request": "launch",
+      "runInTerminal": {
+        "kind": "integrated",
+        "cwd": "${workspaceFolder}",
+        // サーバーは起動せず（--start-clean）、クライアントだけ実行する
+        "args": ["rebar3", "shell", "--start-clean", "--eval", "users_client:main()."],
+        "env": { "API_URL": "http://127.0.0.1:8012" }
+      },
+      "config": { "nameDomain": "shortnames" }
+    }
+  ]
+}

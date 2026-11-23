@@ -1,0 +1,40 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8017
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "perl-mojolicious"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーを自動リロードで起動 (morbo)
+    cmd: "{{.NIX}}morbo -l http://127.0.0.1:{{.PORT}} server.pl"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}perl server.pl daemon -l http://127.0.0.1:{{.PORT}}"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}perl client.pl"
+
+  fmt:
+    desc: フォーマット (perltidy)
+    cmd: "{{.NIX}}perltidy -b -bext=/ server.pl client.pl"
+
+  lint:
+    desc: リント (perlcritic)
+    cmd: "{{.NIX}}perlcritic server.pl client.pl"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

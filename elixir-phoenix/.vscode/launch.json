@@ -1,0 +1,25 @@
+{
+  // Expert にはデバッガが無いので、ターミナルで起動する構成にしている。
+  // server は IEx 付きで起動するので、IEx のプロンプトで
+  //   IEx.break!(UsersApiWeb.UserController.show/2)
+  // のようにブレークポイントを張れる（コードに dbg() を書いても OK）
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (iex)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "iex -S mix phx.server",
+      "cwd": "${workspaceFolder}",
+      "env": { "PORT": "8011" }
+    },
+    {
+      "name": "client",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "mix client",
+      "cwd": "${workspaceFolder}",
+      "env": { "API_URL": "http://127.0.0.1:8011" }
+    }
+  ]
+}

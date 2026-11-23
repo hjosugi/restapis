@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/server",
+      "cwd": "${workspaceFolder}",
+      "environment": [{ "name": "PORT", "value": "8001" }],
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "name": "client (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/client",
+      "cwd": "${workspaceFolder}",
+      "environment": [{ "name": "API_URL", "value": "http://127.0.0.1:8001" }],
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "preLaunchTask": "build"
+    }
+  ]
+}

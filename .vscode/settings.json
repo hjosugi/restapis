@@ -1,0 +1,13 @@
+{
+  // flake.nix 用（nixd / nixfmt はルートの devShell に入っている）
+  "nix.enableLanguageServer": true,
+  "nix.serverPath": "nixd",
+  "nix.serverSettings": {
+    "nixd": {
+      "formatting": { "command": ["nixfmt"] }
+    }
+  },
+  "[nix]": {
+    "editor.formatOnSave": true
+  }
+}

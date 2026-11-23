@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "erlang-language-platform.erlang-language-platform",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

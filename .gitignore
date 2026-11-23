@@ -1,0 +1,11 @@
+# nix / direnv
+.direnv/
+result
+result-*
+
+# go-task のチェックサム
+.task/
+
+# editors
+.DS_Store
+*.swp

@@ -1,0 +1,12 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // clojure-lsp は PATH 上のもの（Calva は既定で最新版を自動ダウンロードするので止める）
+  "calva.clojureLspPath": "clojure-lsp",
+  // フォーマットは cljfmt の設定ファイルに合わせる（task fmt と同じ）
+  "calva.fmt.configPath": ".cljfmt.edn",
+  // Jack-in は deps.edn の clojure CLI（devShell のもの）を使う
+  "calva.depsEdnJackInExecutable": "clojure",
+  "[clojure]": {
+    "editor.formatOnSave": true
+  }
+}

@@ -1,0 +1,6 @@
+# PHPStan の設定（level max = いちばん厳しい）
+parameters:
+    level: max
+    paths:
+        - server.php
+        - client.php

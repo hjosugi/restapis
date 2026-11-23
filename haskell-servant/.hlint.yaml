@@ -1,0 +1,3 @@
+# hlint の設定 (https://github.com/ndmitchell/hlint)。既定のヒントに加えて以下のグループを有効にする
+- group: { name: future, enabled: true } # return → pure、mapM_ → traverse_ など新しい書き方を提案
+- group: { name: generalise, enabled: true } # map → fmap、++ → <> など一般化した関数を提案

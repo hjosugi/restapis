@@ -1,0 +1,3 @@
+;; cljfmt の設定（clojure-lsp / Calva もこのファイルを読む）
+{:sort-ns-references? true
+ :normalize-newlines-at-file-end? true}

@@ -1,0 +1,62 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8015
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "lisp-hunchentoot"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+  # users.asd を読み込んだ SBCL。ライブラリは flake の sbcl.withPackages から ASDF で見える（Quicklisp 不要）
+  # *muffled-warnings*: 依存ライブラリ routes の .asd が毎回出す無害な警告 (bad-system-name) を抑止
+  SBCL: >-
+    sbcl --noinform --non-interactive
+    --eval '(require :asdf)'
+    --eval '(setf sb-ext:*muffled-warnings* (quote (or sb-kernel:uninteresting-redefinition asdf:bad-system-name)))'
+    --eval '(asdf:load-asd (truename "users.asd"))'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  dev:
+    desc: サーバーを変更検知で再起動（watchexec）。REPL で開発するなら Alive / Conjure を使う
+    cmd: "{{.NIX}}watchexec --restart --exts lisp,asd -- task run"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}{{.SBCL}} --eval '(asdf:load-system \"users/server\")' --eval '(users-server:main)'"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}{{.SBCL}} --eval '(asdf:load-system \"users/client\")' --eval '(users-client:main)'"
+
+  swank:
+    desc: nvim (Conjure) から接続する swank サーバーを 127.0.0.1:4005 で起動
+    cmd: "{{.NIX}}{{.SBCL}} --eval '(asdf:load-system \"swank\")' --eval '(swank:create-server :dont-close t)' --eval '(loop (sleep 60))'"
+
+  fmt:
+    desc: フォーマット (cl-indentify でインデント + mallet --fix で行末の空白など)
+    cmds:
+      - "{{.NIX}}cl-indentify *.asd *.lisp"
+      - "{{.NIX}}mallet --fix ."
+
+  lint:
+    desc: リント (mallet + 警告をエラーにしたコンパイル + インデント確認)
+    cmds:
+      - "{{.NIX}}mallet ."
+      # SBCL コンパイラの警告（未定義の関数・変数、型の不一致、未使用の変数など）が 1 件でもあれば失敗
+      - >-
+        {{.NIX}}{{.SBCL}} --eval '
+          (let ((warnings 0))
+            (handler-bind ((warning (lambda (c) (unless (typep c sb-ext:*muffled-warnings*) (incf warnings)))))
+              (asdf:compile-system "users" :force (list "users/server" "users/client")))
+            (uiop:quit (min warnings 1)))'
+      - "{{.NIX}}cl-indentify --check *.asd *.lisp"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "golang.go",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

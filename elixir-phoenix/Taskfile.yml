@@ -1,0 +1,61 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8011
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "elixir-phoenix"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  deps:
+    desc: 依存パッケージを取得 (mix deps.get)
+    cmd: "{{.NIX}}mix deps.get"
+    sources: [mix.exs, mix.lock]
+    status:
+      - test -d deps
+
+  dev:
+    desc: サーバーをホットリロードで起動（MIX_ENV=dev。変更は次のリクエストで再コンパイル）
+    deps: [deps]
+    cmd: "{{.NIX}}mix phx.server"
+
+  run:
+    desc: サーバーを起動 (MIX_ENV=prod)
+    aliases: [main, server]
+    deps: [deps]
+    env:
+      MIX_ENV: prod
+    cmd: "{{.NIX}}mix phx.server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [deps]
+    cmd: "{{.NIX}}mix client"
+
+  build:
+    desc: コンパイル (mix compile)
+    deps: [deps]
+    cmd: "{{.NIX}}mix compile"
+
+  fmt:
+    desc: フォーマット (mix format)
+    deps: [deps]
+    cmd: "{{.NIX}}mix format"
+
+  lint:
+    desc: リント (コンパイラ警告 + Credo)
+    deps: [deps]
+    cmds:
+      - "{{.NIX}}mix compile --warnings-as-errors"
+      - "{{.NIX}}mix credo"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

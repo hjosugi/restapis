@@ -1,0 +1,22 @@
+{
+  // CodeLLDB でネイティブデバッグ（task build で --debugger:native 付きビルドしてから起動）
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/server",
+      "env": { "PORT": "8016" },
+      "preLaunchTask": "task build"
+    },
+    {
+      "name": "client (debug)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/client",
+      "env": { "API_URL": "http://127.0.0.1:8016" },
+      "preLaunchTask": "task build"
+    }
+  ]
+}

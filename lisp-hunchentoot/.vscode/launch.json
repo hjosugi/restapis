@@ -1,0 +1,18 @@
+{
+  // Common Lisp は REPL 中心（Alive: REPL で式を評価 / Load ASDF System で users/server）なので、ここでは Task を実行するだけ
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (task run)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task run"
+    },
+    {
+      "name": "client (task client)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "task client"
+    }
+  ]
+}

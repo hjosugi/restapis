@@ -1,0 +1,21 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // 補完・定義ジャンプは Intelephense。フォーマットは PHP-CS-Fixer に任せる
+  "intelephense.environment.phpVersion": "8.5.0",
+  "intelephense.format.enable": false,
+  "intelephense.telemetry.enabled": false,
+  // PHP-CS-Fixer: 拡張が phar を自動ダウンロードせず、devShell のものと .php-cs-fixer.dist.php を使う
+  "php-cs-fixer.executablePath": "php-cs-fixer",
+  "php-cs-fixer.config": ".php-cs-fixer.dist.php",
+  "php-cs-fixer.lastDownload": 0,
+  // PHPStan: vendor/bin ではなく devShell のものと phpstan.neon を使う
+  "phpstan.binCommand": ["phpstan"],
+  "phpstan.configFile": "phpstan.neon",
+  // VS Code 組み込みの PHP 検証・補完は Intelephense / PHPStan と重複するので切る
+  "php.validate.enable": false,
+  "php.suggest.basic": false,
+  "[php]": {
+    "editor.defaultFormatter": "junstyle.php-cs-fixer",
+    "editor.formatOnSave": true
+  }
+}

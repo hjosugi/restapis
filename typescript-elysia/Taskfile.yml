@@ -1,0 +1,52 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8006
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "typescript-elysia"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  deps:
+    desc: 依存パッケージを取得 (bun install)
+    cmd: "{{.NIX}}bun install --frozen-lockfile"
+    sources: [package.json, bun.lock]
+    status: [test -d node_modules]
+
+  dev:
+    desc: サーバーをホットリロードで起動
+    deps: [deps]
+    cmd: "{{.NIX}}bun --watch src/server.ts"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    deps: [deps]
+    cmd: "{{.NIX}}bun src/server.ts"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [deps]
+    cmd: "{{.NIX}}bun src/client.ts"
+
+  fmt:
+    desc: フォーマット (oxfmt)
+    cmd: "{{.NIX}}oxfmt"
+
+  lint:
+    desc: リント (oxlint) + 型チェック (tsc --noEmit)
+    deps: [deps]
+    cmds:
+      - "{{.NIX}}oxlint --deny-warnings"
+      - "{{.NIX}}tsc --noEmit"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

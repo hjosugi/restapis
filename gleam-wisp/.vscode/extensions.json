@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "gleam.gleam",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}

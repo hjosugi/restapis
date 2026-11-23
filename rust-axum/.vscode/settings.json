@@ -1,0 +1,11 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // 拡張に同梱の rust-analyzer ではなく PATH 上（devShell）のものを起動する
+  "rust-analyzer.server.path": "rust-analyzer",
+  // 保存時のチェックを cargo check ではなく clippy で（task lint と同じ）
+  "rust-analyzer.check.command": "clippy",
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  }
+}

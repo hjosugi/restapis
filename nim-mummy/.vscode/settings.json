@@ -1,0 +1,11 @@
+{
+  // ツールは nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  // nimlangserver は PATH から見つかれば ~/.vscode-nim への自動インストールをしない
+  // 依存の取得 (nimble setup) は `task deps` に任せ、拡張からは実行しない
+  "nim.nimbleAutoSetup": false,
+  "[nim]": {
+    // nimlangserver 経由で nph を使ってフォーマット
+    "editor.defaultFormatter": "nimlang.nimlang",
+    "editor.formatOnSave": true
+  }
+}

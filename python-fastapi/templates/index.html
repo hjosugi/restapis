@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>users (FastAPI + htmx)</title>
+  <!-- htmx はバージョンを固定して CDN から読み込む（integrity で中身が変わっていないことを確認） -->
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@4.0.2/dist/htmx.min.js"
+          integrity="sha384-6NzMyCdh08UZ4b4M17SJJKQLdDijx4z2IqqKLKD0Q/PzCFQLpFuk3konY0WgqbTy"
+          crossorigin="anonymous"></script>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    th, td { padding: 0.25rem 0.75rem; text-align: left; }
+    #error { color: crimson; }
+  </style>
+</head>
+<body>
+  <h1>users</h1>
+
+  <!-- 名前検索: 入力が止まって 300ms 後に GET /ui/users?name=... を送り、#users の中身（行）を差し替える -->
+  <input type="search" name="name" placeholder="名前で検索"
+         hx-get="/ui/users" hx-trigger="input changed delay:300ms" hx-target="#users">
+
+  <table>
+    <thead><tr><th>id</th><th>name</th><th>email</th><th>age</th><th></th></tr></thead>
+    <tbody id="users">{% include "rows.html" %}</tbody>
+  </table>
+
+  <!-- 作成: POST /ui/users が返す 1 行を #users の末尾に足す。4xx は #error に文字として出す -->
+  <form hx-post="/ui/users" hx-target="#users" hx-swap="beforeend"
+        hx-status:4xx="target:#error swap:textContent"
+        hx-on::after:request="if (ctx.response.status < 400) this.reset()">
+    <input name="name" placeholder="name" required>
+    <input name="email" type="email" placeholder="email" required>
+    <input name="age" type="number" min="0" placeholder="age" required>
+    <button>作成</button>
+  </form>
+  <p id="error"></p>
+</body>
+</html>

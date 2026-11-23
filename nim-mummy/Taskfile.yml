@@ -1,0 +1,58 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8016
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "nim-mummy"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  deps:
+    desc: 依存を nimble.lock どおり nimbledeps/ に取得し、nimble.paths を生成
+    cmd: "{{.NIX}}nimble --localdeps setup"
+    sources: [nim_mummy.nimble, nimble.lock]
+    generates: [nimble.paths]
+
+  dev:
+    desc: サーバーをホットリロードで起動 (watchexec で再起動)
+    deps: [deps]
+    cmd: "{{.NIX}}watchexec --restart --exts nim -- nim r --hints:off src/server.nim"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    deps: [deps]
+    cmd: "{{.NIX}}nim r --hints:off src/server.nim"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    deps: [deps]
+    cmd: "{{.NIX}}nim r --hints:off src/client.nim"
+
+  build:
+    desc: バイナリを bin/ にビルド（デバッガ用の情報付き）
+    deps: [deps]
+    cmd: "{{.NIX}}nimble build --debugger:native"
+
+  fmt:
+    desc: フォーマット (nph)
+    cmd: "{{.NIX}}nph src nim_mummy.nimble config.nims"
+
+  lint:
+    desc: リント (nim check。警告・未使用の宣言が 1 件でもあれば失敗)
+    deps: [deps]
+    cmds:
+      # nim check は警告だけなら終了コード 0 なので、Warning / Hint / Error の行があれば失敗にする
+      - for: [src/server.nim, src/client.nim]
+        cmd: "{{.NIX}}nim check --hint:all:off --hint:XDeclaredButNotUsed:on {{.ITEM}} 2>&1 | awk '{ print } / (Warning|Hint|Error): / { n++ } END { exit n > 0 }'"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

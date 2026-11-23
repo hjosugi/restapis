@@ -1,0 +1,53 @@
+# https://taskfile.dev
+version: "3"
+
+vars:
+  PORT: 8010
+  # devShell の外から実行されたら `nix develop` 経由にする（direnv で入っていればそのまま実行）
+  NIX: '{{if ne .RESTAPI_PROJECT "fsharp-giraffe"}}nix develop {{.TASKFILE_DIR}} --command {{end}}'
+
+env:
+  PORT: "{{.PORT}}"
+
+tasks:
+  default:
+    cmd: task --list
+    silent: true
+
+  deps:
+    desc: NuGet パッケージを復元（packages.lock.json どおり）
+    sources: [Directory.Build.props, src/*/*.fsproj, src/*/packages.lock.json]
+    generates: [src/*/obj/project.assets.json]
+    cmd: "{{.NIX}}dotnet restore"
+
+  dev:
+    desc: サーバーをホットリロードで起動（F# は変更のたびに再ビルド + 再起動）
+    cmd: "{{.NIX}}dotnet watch --no-hot-reload --project src/Server"
+
+  run:
+    desc: サーバーを起動
+    aliases: [main, server]
+    cmd: "{{.NIX}}dotnet run --project src/Server"
+
+  client:
+    desc: クライアントで CRUD + 検索を実行（先にサーバーを起動しておく）
+    cmd: "{{.NIX}}dotnet run --project src/Client"
+
+  build:
+    desc: ビルド（警告もエラー扱い）
+    cmd: "{{.NIX}}dotnet build"
+
+  fmt:
+    desc: フォーマット (Fantomas)
+    cmd: "{{.NIX}}fantomas src"
+
+  lint:
+    desc: リント (Fantomas のチェック + FSharpLint)
+    deps: [deps]
+    cmds:
+      - "{{.NIX}}fantomas --check src"
+      - "{{.NIX}}dotnet-fsharplint lint fsharp-giraffe.slnx"
+
+  check:
+    desc: 起動中のサーバーが API 仕様どおりか curl で検証
+    cmd: "{{.NIX}}{{.TASKFILE_DIR}}/../scripts/check.sh http://127.0.0.1:{{.PORT}}"

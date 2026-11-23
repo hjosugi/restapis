@@ -1,0 +1,6 @@
+# perlcritic の設定（https://metacpan.org/pod/Perl::Critic）
+severity = 3
+verbose  = 8
+
+# PPI が Mojo::Base の -signatures を知らず、サブルーチンシグネチャをプロトタイプと誤検出するため無効化
+[-Subroutines::ProhibitSubroutinePrototypes]

@@ -1,0 +1,19 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Fantomas の設定（https://fsprojects.github.io/fantomas/docs/end-users/Configuration.html）
+[*.{fs,fsi,fsx}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+fsharp_multiline_bracket_style = stroustrup
+fsharp_max_record_width = 80
+
+[*.{fsproj,slnx,props,json,yml}]
+indent_style = space
+indent_size = 2

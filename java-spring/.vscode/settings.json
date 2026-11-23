@@ -1,0 +1,19 @@
+{
+  // JDK / Maven / google-java-format / PMD は nix devShell のものを使う（mkhl.direnv が .envrc を読み込む）
+  "java.configuration.updateBuildConfiguration": "automatic",
+  // 保存時の整形は task fmt と同じ google-java-format（RunOnSave で実行）。
+  // redhat.java の Eclipse フォーマッタは結果が違うので使わない
+  "[java]": {
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2
+  },
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.java$",
+        "cmd": "google-java-format --replace '${file}'"
+      }
+    ]
+  }
+  // PMD は task lint で実行（エディタ上はコンパイラと Spring Boot Tools の警告）
+}

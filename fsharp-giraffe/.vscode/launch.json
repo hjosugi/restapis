@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server (debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Server/bin/Debug/net11.0/Server.dll",
+      "cwd": "${workspaceFolder}",
+      "env": { "PORT": "8010" },
+      "console": "internalConsole"
+    },
+    {
+      "name": "client (debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Client/bin/Debug/net11.0/Client.dll",
+      "cwd": "${workspaceFolder}",
+      "env": { "API_URL": "http://127.0.0.1:8010" },
+      "console": "internalConsole"
+    }
+  ]
+}

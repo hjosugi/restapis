@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "haskell.haskell",
+    "mkhl.direnv",
+    "task.vscode-task",
+    "jnoortheen.nix-ide"
+  ]
+}
